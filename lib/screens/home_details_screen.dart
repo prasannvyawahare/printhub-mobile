@@ -110,7 +110,8 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
               onTap: _pickFiles,
               child: Container(
                 decoration: ShapeDecoration(
-                  shape: DashedBorder(borderRadius: BorderRadius.circular(10)),
+                 // shape: DashedBorder(borderRadius: BorderRadius.circular(10)),
+                      shape: DashedBorder(borderRadius: BorderRadius.circular(10)),
                 ),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
