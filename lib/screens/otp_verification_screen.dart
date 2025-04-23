@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/home_screen.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get_storage/get_storage.dart';
 import '../common_widget/print_hub_gradient_button.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   const OtpVerificationScreen({super.key});
@@ -70,24 +74,18 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       backgroundColor: Color(0xF0F9FAFC),
+       backgroundColor: Color.fromARGB(239, 255, 255, 255),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 5,
-        shadowColor: Colors.black,
-
+       backgroundColor: Colors.white,
+       elevation: 0,
         title: Row(
           children: [
-            Text(
-              "PrintHub",
-              style: TextStyle(
-                color: Colors.deepPurple,
-                fontSize: 20,
-                fontFamily: 'poppins',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+          // Icon(Icons.print, color: Colors.purple),
+          
+          Image.asset('assets/images/print_hub_logo.png', height: 25, width: 25,),
+          const SizedBox(width: 8),
+          Text("PrintHub", style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold,)),
+        ],
         ),
         actions: [
           IconButton(
@@ -98,11 +96,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         ],
       ),
       body: Container(
-        color: const Color.fromARGB(255, 247, 243, 243),
+        color: const Color.fromARGB(255, 250, 247, 247),
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 40),
+              padding: const EdgeInsets.only(bottom: 120),
               child: Align(
                 alignment: Alignment.center,
                 child: Column(
@@ -112,7 +110,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       "OTP Verification",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.deepPurple,
+                        color:Colors.indigo,
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'poppins',
@@ -120,10 +118,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         height: 1.1,
                       ),
                     ),
-                    SizedBox(height: 30),
+                    SizedBox(height: 50),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
                       child: Card(
+                        color: Colors.white,
                         elevation: 6,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -223,7 +222,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       child: GradientButton(
                         text: " Verify & Continue",
                         onPressed: () {
-                          // Your onPressed logic here
+                           GetStorage box = GetStorage();
+                          box.write("otp_verification_screen_show", true);
+                          Get.offAll(HomeScreen());
                         },
                       ),
                     ),

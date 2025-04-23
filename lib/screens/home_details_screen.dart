@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:widgets_easier/widgets_easier.dart';
 import '../common_widget/print_hub_gradient_button.dart';
@@ -8,7 +8,7 @@ import 'delivery_screen.dart';
 
 // Model Class
 class PrintFile {
-  final PlatformFile file;
+  final XFile file;
   String? paperType;
   String? size;
   String? color;
@@ -35,7 +35,6 @@ class HomeDetailsScreen extends StatefulWidget {
 class _HomeDetailsScreenState extends State<HomeDetailsScreen>
     with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  final _printOptionsFormKey = GlobalKey<FormState>();
 
   final double basePrice = 12.00;
   final double optionsPrice = 3.50;
@@ -110,8 +109,7 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
               onTap: _pickFiles,
               child: Container(
                 decoration: ShapeDecoration(
-                 // shape: DashedBorder(borderRadius: BorderRadius.circular(10)),
-                      shape: DashedBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: DashedBorder(borderRadius: BorderRadius.circular(10)),
                 ),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
@@ -139,14 +137,16 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
   }
 
   void _pickFiles() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'jpg', 'png'],
+    final typeGroup = XTypeGroup(
+      label: 'documents',
+      extensions: ['pdf', 'jpg', 'png'],
     );
-    if (result != null) {
+
+    final files = await openFiles(acceptedTypeGroups: [typeGroup]);
+
+    if (files.isNotEmpty) {
       setState(() {
-        uploadedFiles.addAll(result.files.map((f) => PrintFile(file: f)));
+        uploadedFiles.addAll(files.map((f) => PrintFile(file: f)));
       });
     }
   }
@@ -157,22 +157,36 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
     });
   }
 
-  void _previewFile(PlatformFile file) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text(file.name),
-        content: (file.extension == 'jpg' || file.extension == 'png')
-            ? Image.file(File(file.path!))
-            : const Text("Preview not available for this file type."),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Close"),
-          ),
-        ],
-      ),
-    );
+  void _previewFile(XFile file) async {
+    if (file.path.endsWith('.jpg') || file.path.endsWith('.png')) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(file.name),
+          content: Image.file(File(file.path)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Close"),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(file.name),
+          content: const Text("Preview not available for this file type."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Close"),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   String _formatFileSize(int bytes) {
@@ -186,7 +200,7 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
   }
 
   Widget _buildFileItem(PrintFile printFile) {
-    PlatformFile file = printFile.file;
+    final file = printFile.file;
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: GestureDetector(
@@ -194,10 +208,20 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
         child: const Icon(Icons.insert_drive_file, color: Colors.blue),
       ),
       title: Text(file.name),
-      subtitle: Text(_formatFileSize(file.size)),
+      subtitle: FutureBuilder<int>(
+        future: file.length(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Text(_formatFileSize(snapshot.data!));
+          } else {
+            return const Text("Calculating size...");
+          }
+        },
+      ),
       trailing: PopupMenuButton<String>(
         icon: const Icon(Icons.more_vert),
         color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
         itemBuilder: (context) => [
           const PopupMenuItem(value: 'printOptions', child: Text('Print Options')),
           const PopupMenuItem(value: 'preview', child: Text('Preview')),
@@ -217,6 +241,7 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
   }
 
   void _showPrintOptionsModal(PrintFile printFile) {
+    final _modalFormKey = GlobalKey<FormState>();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -234,7 +259,7 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
               top: 16,
             ),
             child: Form(
-              key: _printOptionsFormKey,
+              key: _modalFormKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -271,7 +296,7 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
                     setModalState(() => printFile.finish = val);
                     setState(() {});
                   }),
-                  const SizedBox(height: 16),
+                  const SizedBox(height:8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -303,7 +328,7 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
                   GradientButton(
                     text: "Submit",
                     onPressed: () {
-                      if (_printOptionsFormKey.currentState!.validate()) {
+                      if (_modalFormKey.currentState!.validate()) {
                         Navigator.pop(context);
                       }
                     },
@@ -331,10 +356,12 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
         DropdownButtonFormField<String>(
           value: currentValue,
           isExpanded: true,
+          dropdownColor: Colors.white,
           decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             contentPadding: const EdgeInsets.all(12),
           ),
+          borderRadius: BorderRadius.circular(10),
           items: items.map((item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
           onChanged: (val) => onChanged(val!),
           validator: (val) => val == null || val.isEmpty ? 'Please select $label' : null,

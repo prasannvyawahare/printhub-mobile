@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ripple_wave/ripple_wave.dart';
 import '../common_widget/print_hub_gradient_button.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -13,34 +15,62 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
+  final List<Map<String, dynamic>> pages = [
+    {
+      'title': 'Welcome to PrintHub',
+      'subtitle': 'Your One-Stop Print Service Solution',
+      'icon': Icons.print,
+      'footer': 'Loading...',
+    },
+    {
+      'title': 'High Quality Printing',
+      'subtitle':
+          'Experience premium quality printing services with our state-of-the-art technology',
+      'icon': Icons.check,
+      'footer': 'Professional Print Quality',
+    },
+    {
+      'title': 'Track Your Order',
+      'subtitle': 'Monitor your print order status in real-time',
+      'icon': Icons.local_shipping,
+      'footer': 'Searching for orders...',
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
+      body: PageView.builder(
         controller: _controller,
-        children: const [
-          OnboardingPage(
-            title: 'Welcome to PrintHub',
-            subtitle: 'Your One-Stop Print Service Solution',
-            icon: Icons.print,
-            footer: 'Loading...',
-          ),
-          OnboardingPage(
-            title: 'High Quality Printing',
-            subtitle:
-                'Experience premium quality printing services with our state-of-the-art technology',
-            icon: Icons.check,
-            footer: 'Professional Print Quality',
-          ),
-          OnboardingPage(
-            title: 'Track Your Order',
-            subtitle: 'Monitor your print order status in real-time',
-            icon: Icons.local_shipping,
-            footer: 'Searching for orders...',
-            showButton: true,
-          ),
-        ],
+        itemCount: pages.length,
+        itemBuilder: (context, index) {
+          return AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              double value = 1.0;
+              if (_controller.position.haveDimensions) {
+                value = _controller.page! - index;
+                value = (1 - (value.abs() * 0.3)).clamp(0.0, 1.0);
+              }
+
+              return Opacity(
+                opacity: value,
+                child: Transform.translate(
+                  offset: Offset(50 * (1 - value), 0),
+                  child: OnboardingPage(
+                    controller: _controller,
+                    isLastPage: index == pages.length - 1,
+                    title: pages[index]['title'],
+                    subtitle: pages[index]['subtitle'],
+                    icon: pages[index]['icon'],
+                    footer: pages[index]['footer'],
+                    showButton: index == pages.length - 1,
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -52,6 +82,8 @@ class OnboardingPage extends StatelessWidget {
   final IconData icon;
   final String footer;
   final bool showButton;
+  final PageController? controller;
+  final bool isLastPage;
 
   const OnboardingPage({
     super.key,
@@ -60,13 +92,14 @@ class OnboardingPage extends StatelessWidget {
     required this.icon,
     required this.footer,
     this.showButton = false,
+    this.controller,
+    this.isLastPage = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        //  padding: const EdgeInsets.symmetric(horizontal: 20.0),
         color: const Color.fromARGB(255, 244, 247, 248),
         child: Stack(
           children: [
@@ -105,14 +138,12 @@ class OnboardingPage extends StatelessWidget {
                     child: RippleWave(
                       color: Colors.deepPurple,
                       waveCount: 3,
-
                       repeat: true,
-
                       child: Container(
                         padding: const EdgeInsets.all(60),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          gradient: const LinearGradient(
+                          gradient: LinearGradient(
                             colors: [Color(0xFFAA88FF), Color(0xFF7666FF)],
                           ),
                         ),
@@ -129,25 +160,51 @@ class OnboardingPage extends StatelessWidget {
               ),
             ),
             Align(
-              alignment: Alignment.bottomCenter,
+              alignment: Alignment.bottomRight,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child:
-                    showButton
+                padding: const EdgeInsets.only(left: 16, bottom: 16.0, right: 16.0),
+                child: isLastPage
+                    ? showButton
                         ? GradientButton(
-                          text: "Start Printing",
-                          onPressed: () {
-                            GetStorage box = GetStorage();
-                            box.write("onbording_screen_show", true);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ),
-                            );
-                          },
-                        )
-                        : const SizedBox(),
+                            text: "Start Printing",
+                            onPressed: () {
+                              Get.offAll(LoginScreen(),
+                              );
+                            },
+                          )
+                        : const SizedBox()
+                    : GestureDetector(
+                        onTap: () {
+                          controller?.nextPage(
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFFAA88FF), Color(0xFF7666FF)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.deepPurple.withOpacity(0.3),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              )
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ),
+                      ),
               ),
             ),
           ],

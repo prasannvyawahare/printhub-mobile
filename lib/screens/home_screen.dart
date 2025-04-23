@@ -24,7 +24,7 @@ class _MyHomePageState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 500,
+              width: double.infinity,
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [const Color.fromARGB(255, 157, 83, 170),  const Color.fromARGB(255, 7, 107, 189)]),
@@ -54,13 +54,14 @@ class _MyHomePageState extends State<HomeScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 12),
             GridView.count(
+              controller: ScrollController(keepScrollOffset: false),
               shrinkWrap: true,
               crossAxisCount: 2,
-              childAspectRatio: 1.5,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
+              childAspectRatio: 1.7,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
               children: [
                 featureTile(
                   "Quick Print",
@@ -89,43 +90,44 @@ class _MyHomePageState extends State<HomeScreen> {
               ],
             ),
 
-            SizedBox(height: 16),
+            SizedBox(height: 0),
             Text(
               "Popular Services",
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'poppins',
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 8),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
                   Card(
                     color: Colors.white,
-                    elevation: 5,
+                    elevation: 6,
                     child: serviceTile("Document Print", "From Rs 0.10/page"),
                   ),
                   Card(
                     color: Colors.white,
-                    elevation: 5,
+                    elevation: 6,
                     child: serviceTile("Photo Print", "From Rs 2.00/photo"),
                   ),
                   Card(
                     color: Colors.white,
-                    elevation: 5,
+                    elevation: 6,
                     child: serviceTile("Banner Print", "From Rs 15.00/ft"),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height:16),
             GridView.count(
+              controller: ScrollController(keepScrollOffset: false),
               shrinkWrap: true,
               crossAxisCount: 2,
-              childAspectRatio: 1.5,
+              childAspectRatio: 1.6,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               children: [
@@ -155,7 +157,7 @@ class _MyHomePageState extends State<HomeScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 8),
             Card(
               color: Colors.white,
               elevation: 5,
@@ -187,10 +189,13 @@ class _MyHomePageState extends State<HomeScreen> {
                       SizedBox(height: 8),
                       DropdownButtonFormField(
                         decoration: InputDecoration(
+                          fillColor: Colors.white,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                         ),
+                        borderRadius: BorderRadius.circular(10),
+                        focusColor: Colors.white,
                         items:
                             ["Document Print", "Photo Print", "Banner Print"]
                                 .map(
@@ -298,7 +303,7 @@ class _MyHomePageState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: color),
-          SizedBox(height: 5),
+          // SizedBox(height: 5),
           Text(
             title,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -313,11 +318,11 @@ class _MyHomePageState extends State<HomeScreen> {
   Widget serviceTile(String title, String price) {
     return Expanded(
       child: GestureDetector(
-        onTap: () => Get.offAll(HomeDetailsScreen()),
+        onTap: () => Get.to(HomeDetailsScreen()),
         child: Container(
           margin: EdgeInsets.all(5),
           width: 130,
-          height: 130,
+          height: 100,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
           child: Center(
             child: Column(
@@ -338,7 +343,7 @@ class _MyHomePageState extends State<HomeScreen> {
 
   Widget tile(String title, String subtitle, IconData icon, Color color) {
     return GestureDetector(
-       onTap: () => Get.offAll(HomeDetailsScreen()),
+       onTap: () => Get.to(HomeDetailsScreen()),
       child: Container(
         width: 160,
         padding: EdgeInsets.all(12),

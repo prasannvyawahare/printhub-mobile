@@ -21,8 +21,8 @@ class GradientButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           gradient: const LinearGradient(
-            colors: [Color.fromARGB(255, 161, 1, 182),Color(0xFF7F00FF) ], // Purple-pink gradient
-            begin: Alignment.centerLeft,
+            colors: [Color.fromARGB(255, 160, 96, 172),  Color.fromARGB(255, 8, 118, 209) ], // Purple-pink gradient
+            begin: Alignment.bottomLeft,
             end: Alignment.centerRight,
           ),
         ),
