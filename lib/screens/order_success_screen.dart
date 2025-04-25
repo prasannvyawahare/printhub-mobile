@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/bottom_navigation_bar.dart';
+import 'package:flutter_application_1/screens/order_details_screen.dart';
+import 'package:flutter_application_1/screens/order_tracking_screen.dart';
+import 'package:get/get.dart';
 import '../common_widget/print_hub_gradient_button.dart';
 import '../common_widget/print_hub_app_bar.dart';
 import 'package:flutter_application_1/screens/home_screen.dart';
@@ -10,7 +14,7 @@ class OrderSuccessScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FBFB),
-      appBar: const PrintHubAppBar(),
+      appBar: const PrintHubAppBar(showBackButton: true),
 
       body: SingleChildScrollView(
         child: Padding(
@@ -69,13 +73,13 @@ class OrderSuccessScreen extends StatelessWidget {
               GradientButton(
                 text: 'Track Order',
                 onPressed: () {
-                  // Navigate to tracking screen
+                  Get.to(OrderTrackingScreen());
                 },
               ),
               const SizedBox(height: 16),
               OutlinedButton(
                 onPressed: () {
-                  // Navigate to order details
+                   Get.to(OrderDetailsScreen());
                 },
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFF6C63FF)),
@@ -101,14 +105,15 @@ class OrderSuccessScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: GradientButton(text: "Back to Home", onPressed: () {
-          Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
-        }),
+      bottomNavigationBar: Container(
+         width: double.infinity,
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: GradientButton(text: "Back to Home", onPressed: () {
+            Get.to(BottomNavigationBarScreen());
+          }),
+        ),
       ),
     );
   }

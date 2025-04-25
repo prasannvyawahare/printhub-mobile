@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/bottom_navigation_bar.dart';
 import 'package:flutter_application_1/screens/onbording_screen.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -31,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
       bool? hasSeenOtpVerification = box.read('otp_verification_screen_show');
 
       if (hasSeenOtpVerification == true) {
-        Get.off(() => HomeScreen()); // or HomeScreen()
+        Get.off(() => BottomNavigationBarScreen()); // or HomeScreen()
       } else {
         Get.off(() => OnboardingScreen());
       }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/order_success_screen.dart';
+import 'package:get/get.dart';
 import '../common_widget/print_hub_gradient_button.dart';
 import '../common_widget/print_hub_app_bar.dart';
 
@@ -32,7 +34,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PrintHubAppBar(),
+      appBar: const PrintHubAppBar(showBackButton: true),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -56,6 +58,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
            if (_selectedDeliveryOption == "Deliver to My Location") {
             if (_formKey.currentState?.validate() != true) return;
           }
+          Get.to(OrderSuccessScreen());
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Order placed for $_selectedDeliveryOption!")),
           );

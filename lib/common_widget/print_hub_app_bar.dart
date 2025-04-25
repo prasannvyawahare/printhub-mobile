@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 
 class PrintHubAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const PrintHubAppBar({Key? key}) : super(key: key);
+   final bool showBackButton;
+  final String? title;
+
+  const PrintHubAppBar({
+    super.key,
+    this.showBackButton = false,
+    this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      
+      automaticallyImplyLeading: false,
+      leading: showBackButton
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_outlined),
+              onPressed: () => Get.back(),
+            )
+          : null,
       titleSpacing: 20, 
       title: Row(
         children: [

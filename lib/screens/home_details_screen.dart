@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:widgets_easier/widgets_easier.dart';
 import '../common_widget/print_hub_gradient_button.dart';
 import '../common_widget/print_hub_app_bar.dart';
@@ -45,7 +46,8 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
     double totalPrice = _calculateTotalPrice();
 
     return Scaffold(
-      appBar: const PrintHubAppBar(),
+      backgroundColor: const Color(0xFFF8FBFB),
+      appBar: const PrintHubAppBar(showBackButton: true,),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -59,35 +61,36 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: GradientButton(
-          text: "Proceed to Checkout",
-          onPressed: () {
-            bool allValid = uploadedFiles.every((file) =>
-                file.paperType != null &&
-                file.size != null &&
-                file.color != null &&
-                file.finish != null &&
-                file.quantity > 0);
-
-            if (_formKey.currentState!.validate() &&
-                uploadedFiles.isNotEmpty &&
-                allValid) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const DeliveryScreen()),
-              );
-            } else if (uploadedFiles.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Please upload at least one file.')),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Please complete all print options.')),
-              );
-            }
-          },
+      bottomNavigationBar: Container(
+         width: double.infinity,
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: GradientButton(
+            text: "Proceed to Checkout",
+            onPressed: () {
+              bool allValid = uploadedFiles.every((file) =>
+                  file.paperType != null &&
+                  file.size != null &&
+                  file.color != null &&
+                  file.finish != null &&
+                  file.quantity > 0);
+        
+              if (_formKey.currentState!.validate() &&
+                  uploadedFiles.isNotEmpty &&
+                  allValid) {
+                 Get.to(DeliveryScreen());
+              } else if (uploadedFiles.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please upload at least one file.')),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please complete all print options.')),
+                );
+              }
+            },
+          ),
         ),
       ),
     );

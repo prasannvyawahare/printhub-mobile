@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/home_details_screen.dart';
+import 'package:flutter_application_1/screens/order_status_screen.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../common_widget/print_hub_gradient_button.dart';
 import '../common_widget/print_hub_app_bar.dart';
@@ -16,6 +17,7 @@ class _MyHomePageState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF8FBFB),
       appBar: const  PrintHubAppBar(),
      
       body: SingleChildScrollView(
@@ -90,7 +92,7 @@ class _MyHomePageState extends State<HomeScreen> {
               ],
             ),
 
-            SizedBox(height: 0),
+            SizedBox(height:16),
             Text(
               "Popular Services",
               style: TextStyle(
@@ -105,16 +107,19 @@ class _MyHomePageState extends State<HomeScreen> {
               child: Row(
                 children: [
                   Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 12),
                     color: Colors.white,
                     elevation: 6,
                     child: serviceTile("Document Print", "From Rs 0.10/page"),
                   ),
                   Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 12),
                     color: Colors.white,
                     elevation: 6,
                     child: serviceTile("Photo Print", "From Rs 2.00/photo"),
                   ),
                   Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 12),
                     color: Colors.white,
                     elevation: 6,
                     child: serviceTile("Banner Print", "From Rs 15.00/ft"),
@@ -268,7 +273,9 @@ class _MyHomePageState extends State<HomeScreen> {
                             child: Align(
                               alignment: Alignment.topRight,
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.to(OrderStatusScreen());
+                                },
                                 child: Text('View All'),
                               ),
                             ),

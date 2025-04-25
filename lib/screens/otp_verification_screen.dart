@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/home_screen.dart';
+import 'package:flutter_application_1/screens/bottom_navigation_bar.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import '../common_widget/print_hub_gradient_button.dart';
@@ -224,7 +224,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         onPressed: () {
                            GetStorage box = GetStorage();
                           box.write("otp_verification_screen_show", true);
-                          Get.offAll(HomeScreen());
+                          Get.offAll(BottomNavigationBarScreen());
                         },
                       ),
                     ),
