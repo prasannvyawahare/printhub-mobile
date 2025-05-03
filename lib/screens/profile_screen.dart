@@ -53,96 +53,149 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: const PrintHubAppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Card(
-          elevation: 6,
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 25, right: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () async {
-                      final updated = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditProfilePage(
-                            name: name,
-                            email: email,
-                            phone: phone,
-                            address: address,
-                            language: language,
-                            emailNotifications: emailNotifications,
-                            smsNotifications: smsNotifications,
-                            pushNotifications: pushNotifications,
-                            imagePath: profileImagePath,
-                          ),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 5,
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+              child: Column(
+                children: [
+                  Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      CircleAvatar(
+                        radius: 55,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundImage:
+                              profileImagePath != null
+                                  ? FileImage(File(profileImagePath!))
+                                  : null,
+                          child:
+                              profileImagePath == null
+                                  ? Text(
+                                    name.isNotEmpty ? name[0] : '?',
+                                    style: const TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                  : null,
                         ),
-                      );
+                      ),
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.grey[350],
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.edit,
+                            size: 14,
+                            color: Colors.blueAccent[700],
+                          ),
+                          onPressed: () async {
+                            final updated = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => EditProfilePage(
+                                      name: name,
+                                      email: email,
+                                      phone: phone,
+                                      address: address,
+                                      language: language,
+                                      emailNotifications: emailNotifications,
+                                      smsNotifications: smsNotifications,
+                                      pushNotifications: pushNotifications,
+                                      imagePath: profileImagePath,
+                                    ),
+                              ),
+                            );
 
-                      if (updated != null) {
-                        updateProfile(
-                          newName: updated['name'],
-                          newEmail: updated['email'],
-                          newPhone: updated['phone'],
-                          newAddress: updated['address'],
-                          newLanguage: updated['language'],
-                          newEmailNotifications: updated['emailNotifications'],
-                          newSmsNotifications: updated['smsNotifications'],
-                          newPushNotifications: updated['pushNotifications'],
-                          newImagePath: updated['imagePath'],
-                        );
-                      }
-                    },
+                            if (updated != null) {
+                              updateProfile(
+                                newName: updated['name'],
+                                newEmail: updated['email'],
+                                newPhone: updated['phone'],
+                                newAddress: updated['address'],
+                                newLanguage: updated['language'],
+                                newEmailNotifications:
+                                    updated['emailNotifications'],
+                                newSmsNotifications:
+                                    updated['smsNotifications'],
+                                newPushNotifications:
+                                    updated['pushNotifications'],
+                                newImagePath: updated['imagePath'],
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.grey,
-                    backgroundImage: profileImagePath != null
-                        ? FileImage(File(profileImagePath!))
-                        : null,
-                    child: profileImagePath == null
-                        ? const Text("100×100")
-                        : null,
+                  const SizedBox(height: 24),
+                  
+                  _buildProfileItem(Icons.person, "Full Name", name),
+                  _buildProfileItem(Icons.email, "Email", email),
+                  _buildProfileItem(Icons.phone, "Phone", phone),
+                  _buildProfileItem(Icons.home, "Address", address),
+                  _buildProfileItem(
+                    Icons.language,
+                    "Preferred Language",
+                    language,
                   ),
-                ),
-                const SizedBox(height: 24),
-                _buildProfileItem("Full Name", name),
-                _buildProfileItem("Email", email),
-                _buildProfileItem("Phone", phone),
-                _buildProfileItem("Address", address),
-                _buildProfileItem("Preferred Language", language),
-                 const SizedBox(height: 16),
-                // const Text(
-                //   "Notification Preferences",
-                //   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                // ),
-                // _buildCheckboxDisplay("Email notifications", emailNotifications),
-                // _buildCheckboxDisplay("SMS notifications", smsNotifications),
-                // _buildCheckboxDisplay("Push notifications", pushNotifications),
-              ],
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildProfileItem(String title, String value) {
+  Widget _buildProfileItem(IconData icon, String title, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
-          Text(value, style: const TextStyle(fontSize: 16)),
+          const SizedBox(width: 20),
+          Icon(icon, color: Colors.indigo, size: 20),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[700],
+                    
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -213,7 +266,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
     if (pickedFile != null) {
       setState(() {
         _imagePath = pickedFile.path;
@@ -224,7 +279,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit Profile")),
+      backgroundColor: const Color(0xFFF8FBFB),
+      appBar: AppBar(title: const Text("Edit Profile"), backgroundColor: Colors.white,),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -234,23 +290,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  // backgroundColor: Colors.grey,
+                  backgroundColor: Colors.grey[200],
                   backgroundImage:
                       _imagePath != null ? FileImage(File(_imagePath!)) : null,
-                  child:
-                      _imagePath == null ? const Text("100×100") : null,
-                  
+                  child: _imagePath == null ? const Text("100×100") : null,
                 ),
-                
+
                 Positioned(
-                  bottom: 8,
-                  right: 8,
+                  bottom: 6,
+                  right: 3,
                   child: InkWell(
                     onTap: _pickImage,
                     child: CircleAvatar(
                       radius: 14,
-                      backgroundColor: Colors.black,
-                      child: const Icon(Icons.camera_alt, size: 14, color: Colors.white),
+                      backgroundColor: Colors.grey[350],
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: 14,
+                        color: Colors.blueAccent[700],
+                      ),
                     ),
                   ),
                 ),
@@ -294,8 +352,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller,
-      {int maxLines = 1}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    int maxLines = 1,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
@@ -315,10 +376,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
         labelText: "Preferred Language",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
       ),
+       borderRadius: BorderRadius.circular(10),
+       dropdownColor: Colors.white,
       value: _selectedLanguage,
-      items: ['English', 'Spanish', 'French']
-          .map((lang) => DropdownMenuItem(value: lang, child: Text(lang)))
-          .toList(),
+      items:
+          ['English', 'Spanish', 'French']
+              .map((lang) => DropdownMenuItem(value: lang, child: Text(lang)))
+              .toList(),
       onChanged: (value) => setState(() => _selectedLanguage = value!),
     );
   }

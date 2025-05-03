@@ -36,7 +36,6 @@ class HomeDetailsScreen extends StatefulWidget {
 class _HomeDetailsScreenState extends State<HomeDetailsScreen>
     with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-
   final double basePrice = 12.00;
   final double optionsPrice = 3.50;
   List<PrintFile> uploadedFiles = [];
@@ -47,7 +46,7 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FBFB),
-      appBar: const PrintHubAppBar(showBackButton: true,),
+      appBar: const PrintHubAppBar(showBackButton: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -62,7 +61,7 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
         ),
       ),
       bottomNavigationBar: Container(
-         width: double.infinity,
+        width: double.infinity,
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -75,11 +74,11 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
                   file.color != null &&
                   file.finish != null &&
                   file.quantity > 0);
-        
+
               if (_formKey.currentState!.validate() &&
                   uploadedFiles.isNotEmpty &&
                   allValid) {
-                 Get.to(DeliveryScreen());
+                Get.to(DeliveryScreen());
               } else if (uploadedFiles.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Please upload at least one file.')),
@@ -105,8 +104,7 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Upload Files",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text("Upload Files", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             InkWell(
               onTap: _pickFiles,
@@ -121,10 +119,8 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
                       children: [
                         Icon(Icons.cloud_upload_rounded, size: 50),
                         SizedBox(height: 10),
-                        Text(
-                          "Click to select files\nSupported formats: PDF, JPG, PNG",
-                          textAlign: TextAlign.center,
-                        ),
+                        Text("Click to select files\nSupported formats: PDF, JPG, PNG",
+                            textAlign: TextAlign.center),
                       ],
                     ),
                   ),
@@ -139,19 +135,19 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
     );
   }
 
-  void _pickFiles() async {
-    final typeGroup = XTypeGroup(
-      label: 'documents',
-      extensions: ['pdf', 'jpg', 'png'],
-    );
-
+  Future<void> _pickFiles() async {
+    final typeGroup = XTypeGroup(label: 'documents', extensions: ['pdf', 'jpg', 'png']);
     final files = await openFiles(acceptedTypeGroups: [typeGroup]);
 
-    if (files.isNotEmpty) {
-      setState(() {
-        uploadedFiles.addAll(files.map((f) => PrintFile(file: f)));
-      });
+    for (var f in files) {
+      if (!uploadedFiles.any((existing) => existing.file.path == f.path)) {
+        final newFile = PrintFile(file: f);
+        uploadedFiles.add(newFile);
+        await _showPrintOptionsModal(newFile);
+      }
     }
+
+    setState(() {});
   }
 
   void _removeFile(PrintFile printFile) {
@@ -192,23 +188,13 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
     }
   }
 
-  String _formatFileSize(int bytes) {
-    if (bytes >= 1048576) {
-      return "${(bytes / 1048576).toStringAsFixed(1)} MB";
-    } else if (bytes >= 1024) {
-      return "${(bytes / 1024).toStringAsFixed(1)} KB";
-    } else {
-      return "$bytes B";
-    }
-  }
-
   Widget _buildFileItem(PrintFile printFile) {
     final file = printFile.file;
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: GestureDetector(
         onTap: () => _previewFile(file),
-        child: const Icon(Icons.insert_drive_file, color: Colors.blue),
+        child: _getFileIcon(file.path),
       ),
       title: Text(file.name),
       subtitle: FutureBuilder<int>(
@@ -230,22 +216,22 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
           const PopupMenuItem(value: 'preview', child: Text('Preview')),
           const PopupMenuItem(value: 'remove', child: Text('Remove')),
         ],
-        onSelected: (value) {
+        onSelected: (value) async {
           if (value == 'preview') {
             _previewFile(file);
           } else if (value == 'remove') {
             _removeFile(printFile);
           } else if (value == 'printOptions') {
-            _showPrintOptionsModal(printFile);
+            await _showPrintOptionsModal(printFile);
           }
         },
       ),
     );
   }
 
-  void _showPrintOptionsModal(PrintFile printFile) {
+  Future<void> _showPrintOptionsModal(PrintFile printFile) async {
     final _modalFormKey = GlobalKey<FormState>();
-    showModalBottomSheet(
+    return await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
@@ -269,37 +255,30 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
                   const Text("Print Options", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
                   _buildValidatedDropdown("Paper Type", printFile.paperType, [
-                    'Standard White (80gsm)',
-                    'Glossy (100gsm)',
-                    'Recycled (90gsm)',
+                    'Standard White (80gsm)', 'Glossy (100gsm)', 'Recycled (90gsm)',
                   ], (val) {
                     setModalState(() => printFile.paperType = val);
                     setState(() {});
                   }),
                   _buildValidatedDropdown("Size", printFile.size, [
-                    'A4 (210 × 297mm)',
-                    'Letter (8.5 × 11 in)',
-                    'A5 (148 × 210mm)',
+                    'A4 (210 × 297mm)', 'Letter (8.5 × 11 in)', 'A5 (148 × 210mm)',
                   ], (val) {
                     setModalState(() => printFile.size = val);
                     setState(() {});
                   }),
                   _buildValidatedDropdown("Color", printFile.color, [
-                    'Full Color',
-                    'Black & White',
+                    'Full Color', 'Black & White',
                   ], (val) {
                     setModalState(() => printFile.color = val);
                     setState(() {});
                   }),
                   _buildValidatedDropdown("Finish", printFile.finish, [
-                    'Standard',
-                    'Glossy',
-                    'Matte',
+                    'Standard', 'Glossy', 'Matte',
                   ], (val) {
                     setModalState(() => printFile.finish = val);
                     setState(() {});
                   }),
-                  const SizedBox(height:8),
+                  const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -377,9 +356,36 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
   double _calculateTotalPrice() {
     double total = 0;
     for (var file in uploadedFiles) {
-      total += (basePrice + optionsPrice) * file.quantity;
+      if (file.paperType != null &&
+          file.size != null &&
+          file.color != null &&
+          file.finish != null) {
+        total += (basePrice + optionsPrice) * file.quantity;
+      }
     }
     return total;
+  }
+
+  String _formatFileSize(int bytes) {
+    if (bytes >= 1048576) {
+      return "${(bytes / 1048576).toStringAsFixed(1)} MB";
+    } else if (bytes >= 1024) {
+      return "${(bytes / 1024).toStringAsFixed(1)} KB";
+    } else {
+      return "$bytes B";
+    }
+  }
+
+  Icon _getFileIcon(String path) {
+    if (path.toLowerCase().endsWith('.pdf')) {
+      return const Icon(Icons.picture_as_pdf, color: Colors.red);
+    } else if (path.toLowerCase().endsWith('.jpg') ||
+        path.toLowerCase().endsWith('.jpeg') ||
+        path.toLowerCase().endsWith('.png')) {
+      return const Icon(Icons.image, color: Colors.green);
+    } else {
+      return const Icon(Icons.insert_drive_file, color: Colors.blue);
+    }
   }
 
   Widget _buildPriceSummaryCard(double total) {
@@ -391,8 +397,7 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Price Summary",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text("Price Summary", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             _buildPriceRow("Base Price", basePrice),
             _buildPriceRow("Options", optionsPrice),
@@ -412,8 +417,7 @@ class _HomeDetailsScreenState extends State<HomeDetailsScreen>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: isBold ? const TextStyle(fontWeight: FontWeight.bold) : null),
-          Text("\$${amount.toStringAsFixed(2)}",
-              style: isBold ? const TextStyle(fontWeight: FontWeight.bold) : null),
+          Text("\$${amount.toStringAsFixed(2)}", style: isBold ? const TextStyle(fontWeight: FontWeight.bold) : null),
         ],
       ),
     );

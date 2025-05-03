@@ -110,13 +110,14 @@ class OrderStatusScreen extends StatelessWidget {
                   children: [
                     Text(title,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500)),
+                            fontSize: 14, fontWeight: FontWeight.w500)),
                     const SizedBox(height: 4),
-                    Text(subtitle),
+                    Text(subtitle, style: const TextStyle(
+                            fontSize: 12)),
                     const SizedBox(height: 4),
                     Text(price,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
+                            fontSize: 14, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ],

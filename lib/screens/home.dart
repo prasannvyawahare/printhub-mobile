@@ -6,14 +6,14 @@ import '../common_widget/print_hub_gradient_button.dart';
 import '../common_widget/print_hub_app_bar.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
   @override
-  State<HomeScreen> createState() => _MyHomePageState();
+  State<Home> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<HomeScreen> {
+class _MyHomePageState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,86 +96,159 @@ class _MyHomePageState extends State<HomeScreen> {
                 ),
               ],
             ),
-
-            SizedBox(height: 16),
-            Text(
-              "Popular Services",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'poppins',
+            const SizedBox(height: 16),
+            Container(
+               decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(color: Colors.black26, blurRadius: 6, spreadRadius: 0.6),
+          ],
+        ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Our Services",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'poppins',
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+              
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          serviceTile("Document Print", "From Rs 0.10/page", Icons.description, Colors.blue,),
+                          serviceTile("Photo Print", "From Rs 2.00/photo", Icons.photo, Colors.purple,),
+                          serviceTile("Banner Print", "From Rs 15.00/ft", Icons.rectangle_outlined, Colors.green,),
+                        ],
+                      ),
+                    ),
+                    Divider(height: 32,),
+                    const SizedBox(height: 8),
+                    GridView.count(
+                      controller: ScrollController(keepScrollOffset: false),
+                      shrinkWrap: true,
+                      crossAxisCount: 2,
+                      childAspectRatio: 1.5,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      children: [
+                        tile(
+                          "Xerox Print",
+                          "From Rs 0.05/page",
+                          Icons.copy,
+                          Colors.blue.shade500,
+                        ),
+                        tile(
+                          "Color Print",
+                          "From Rs 0.25/page",
+                          Icons.color_lens,
+                          Colors.pink.shade500,
+                        ),
+                        tile(
+                          "Laser Print",
+                          "From Rs 0.15/page",
+                          Icons.print,
+                          Colors.purple.shade500,
+                        ),
+                        tile(
+                          "Jumbo Print",
+                          "From Rs 2.00/sq.ft",
+                          Icons.crop_free,
+                          Colors.green.shade500,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-            SizedBox(height: 0),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 5,
-                      vertical: 12,
-                    ),
-                    color: Colors.white,
-                    elevation: 6,
-                    child:  serviceTile("Document Print", "From Rs 0.10/page", Icons.description, Colors.blue,),
-                  ),
-                  Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 5,
-                      vertical: 12,
-                    ),
-                    color: Colors.white,
-                    elevation: 6,
-                    child: serviceTile("Photo Print", "From Rs 2.00/photo", Icons.photo, Colors.purple,),
-                  ),
-                  Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 5,
-                      vertical: 12,
-                    ),
-                    color: Colors.white,
-                    elevation: 6,
-                    child: serviceTile("Banner Print", "From Rs 15.00/ft", Icons.rectangle_outlined, Colors.green,),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            GridView.count(
-              controller: ScrollController(keepScrollOffset: false),
-              shrinkWrap: true,
-              crossAxisCount: 2,
-              childAspectRatio: 1.7,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              children: [
-                tile(
-                  "Xerox Print",
-                  "From Rs 0.05/page",
-                  Icons.copy,
-                  Colors.blue.shade500,
-                ),
-                tile(
-                  "Color Print",
-                  "From Rs 0.25/page",
-                  Icons.color_lens,
-                  Colors.pink.shade500,
-                ),
-                tile(
-                  "Laser Print",
-                  "From Rs 0.15/page",
-                  Icons.print,
-                  Colors.purple.shade500,
-                ),
-                tile(
-                  "Jumbo Print",
-                  "From Rs 2.00/sq.ft",
-                  Icons.crop_free,
-                  Colors.green.shade500,
-                ),
-              ],
-            ),
+            // SizedBox(height: 16),
+            // Text(
+            //   "Popular Services",
+            //   style: TextStyle(
+            //     fontSize: 16,
+            //     fontWeight: FontWeight.bold,
+            //     fontFamily: 'poppins',
+            //   ),
+            // ),
+            // SizedBox(height: 0),
+            // SingleChildScrollView(
+            //   scrollDirection: Axis.horizontal,
+            //   child: Row(
+            //     children: [
+            //       Card(
+            //         margin: const EdgeInsets.symmetric(
+            //           horizontal: 5,
+            //           vertical: 12,
+            //         ),
+            //         color: Colors.white,
+            //         elevation: 6,
+            //         child: serviceTile("Document Print", "From Rs 0.10/page"),
+            //       ),
+            //       Card(
+            //         margin: const EdgeInsets.symmetric(
+            //           horizontal: 5,
+            //           vertical: 12,
+            //         ),
+            //         color: Colors.white,
+            //         elevation: 6,
+            //         child: serviceTile("Photo Print", "From Rs 2.00/photo"),
+            //       ),
+            //       Card(
+            //         margin: const EdgeInsets.symmetric(
+            //           horizontal: 5,
+            //           vertical: 12,
+            //         ),
+            //         color: Colors.white,
+            //         elevation: 6,
+            //         child: serviceTile("Banner Print", "From Rs 15.00/ft"),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // SizedBox(height: 8),
+            // GridView.count(
+            //   controller: ScrollController(keepScrollOffset: false),
+            //   shrinkWrap: true,
+            //   crossAxisCount: 2,
+            //   childAspectRatio: 1.7,
+            //   crossAxisSpacing: 10,
+            //   mainAxisSpacing: 10,
+            //   children: [
+            //     tile(
+            //       "Xerox Print",
+            //       "From Rs 0.05/page",
+            //       Icons.copy,
+            //       Colors.blue.shade500,
+            //     ),
+            //     tile(
+            //       "Color Print",
+            //       "From Rs 0.25/page",
+            //       Icons.color_lens,
+            //       Colors.pink.shade500,
+            //     ),
+            //     tile(
+            //       "Laser Print",
+            //       "From Rs 0.15/page",
+            //       Icons.print,
+            //       Colors.purple.shade500,
+            //     ),
+            //     tile(
+            //       "Jumbo Print",
+            //       "From Rs 2.00/sq.ft",
+            //       Icons.crop_free,
+            //       Colors.green.shade500,
+            //     ),
+            //   ],
+            // ),
             // SizedBox(height: 8),
             // Card(
             //   color: Colors.white,
@@ -337,27 +410,45 @@ class _MyHomePageState extends State<HomeScreen> {
   }
 
   Widget serviceTile(String title, String price, IconData icon, Color color,) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => Get.to(HomeDetailsScreen()),
-        child: Container(
-          margin: EdgeInsets.all(5),
-          width: 130,
-          height: 100,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                 Icon(icon, color: color),
-                 const SizedBox(height: 8),
-                Text(
-                  title,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+    return GestureDetector(
+      onTap: () => Get.to(HomeDetailsScreen()),
+      child: Container(
+        width: 130,
+        height: 100,
+        margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(color: Colors.black26, blurRadius: 6, spreadRadius: 0.6),
+          ],
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+               Icon(icon, color: color),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'poppins',
                 ),
-                Text(price, style: TextStyle(fontSize: 12, color: Colors.grey)),
-              ],
-            ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                price,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                  fontFamily: 'poppins',
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
       ),

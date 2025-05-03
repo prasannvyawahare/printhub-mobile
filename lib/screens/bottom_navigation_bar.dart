@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/home.dart';
 import 'package:flutter_application_1/screens/home_screen.dart';
 import 'package:flutter_application_1/screens/order_status_screen.dart';
-import 'package:flutter_application_1/screens/pricing_screen.dart';
+import 'package:flutter_application_1/screens/quick_price_calculator_screen.dart';
 import 'package:flutter_application_1/screens/profile_screen.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
@@ -15,8 +16,9 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
 
   final List<Widget> _screens = [
     HomeScreen(),
+    Home(),
     OrderStatusScreen(),
-    PricingScreen(),
+    QuickPriceCalculatorScreen(),
     ProfileScreen(),
   ];
 
@@ -42,12 +44,16 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.receipt_long),
             label: 'Orders',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.currency_rupee_rounded),
-            label: 'Pricing',
+            label: 'Quotation',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
