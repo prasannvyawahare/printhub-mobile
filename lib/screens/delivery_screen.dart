@@ -155,7 +155,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
           if (value == null || value.isEmpty) {
             return '$label is required';
           }
-          if (email && !RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+\$').hasMatch(value)) {
+          if (email && !RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value)) {
             return 'Enter a valid email address';
           }
           return null;
