@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/bottom_navigation_bar.dart';
 import 'package:flutter_application_1/screens/order_details_screen.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_application_1/screens/order_success_screen.dart';
 
 void main() async {
   await GetStorage.init(); // Important: Initialize storage
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
