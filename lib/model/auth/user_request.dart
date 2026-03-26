@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'user_request.g.dart';
+// part 'user_request.g.dart';
 
 @JsonSerializable()
 class UserRequest {
@@ -9,10 +9,10 @@ class UserRequest {
 
   UserRequest({required this.mobile, required this.email});
 
-  factory UserRequest.fromJson(Map<String, dynamic> json) =>
-      _$UserRequestFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserRequestToJson(this);
+  // factory UserRequest.fromJson(Map<String, dynamic> json) =>
+  //     _$UserRequestFromJson(json);
+  //
+  // Map<String, dynamic> toJson() => _$UserRequestToJson(this);
 
 
 }

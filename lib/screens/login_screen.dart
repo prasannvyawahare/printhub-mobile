@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final googleSignInController = Get.put(GoogleSignInController());
+
     return Scaffold(
       backgroundColor: Color.fromARGB(238, 255, 255, 255),
       appBar: AppBar(
@@ -297,7 +297,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     //   );
                                     // },
                                     onTap: () {
-                                      googleSignInController.signInWithGoogle();
+
                                     },
                                     borderRadius: BorderRadius.circular(10),
                                     child: Container(

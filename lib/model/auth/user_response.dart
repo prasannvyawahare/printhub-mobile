@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'user_response.g.dart';
+//part 'user_response.g.dart';
 
 @JsonSerializable()
 class UserResponse {
@@ -14,10 +14,10 @@ class UserResponse {
     required this.data,
   });
 
-  factory UserResponse.fromJson(Map<String, dynamic> json) =>
-      _$UserResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserResponseToJson(this);
+  // factory UserResponse.fromJson(Map<String, dynamic> json) =>
+  //     _$UserResponseFromJson(json);
+  //
+  // Map<String, dynamic> toJson() => _$UserResponseToJson(this);
 }
 
 @JsonSerializable()
@@ -44,8 +44,8 @@ class UserData {
     required this.version,
   });
 
-  factory UserData.fromJson(Map<String, dynamic> json) =>
-      _$UserDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserDataToJson(this);
+  // factory UserData.fromJson(Map<String, dynamic> json) =>
+  //     _$UserDataFromJson(json);
+  //
+  // Map<String, dynamic> toJson() => _$UserDataToJson(this);
 }
